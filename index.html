@@ -127,7 +127,8 @@ function newGame(){
 }
 function sizeBoard(){
   const avail=Math.min(window.innerWidth-36,1060);
-  const size=Math.max(22,Math.min(40,Math.floor((avail-20)/G.cols)-3));
+  const availH=window.innerHeight-260; // room for the title, buttons and counters
+  const size=Math.max(18,Math.min(40,Math.floor((avail-20)/G.cols)-3,Math.floor(availH/G.rows)-3));
   document.documentElement.style.setProperty('--cell',size+'px');
   board.style.gridTemplateColumns=`repeat(${G.cols},var(--cell))`;
 }
