@@ -15,7 +15,7 @@ html,body{margin:0;min-height:100%}
 body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);
   background:radial-gradient(1200px 600px at 20% -10%,#2a1f6b 0%,transparent 60%),radial-gradient(900px 500px at 110% 10%,#0e4a5c 0%,transparent 55%),linear-gradient(180deg,var(--bg1),var(--bg2));
   background-attachment:fixed;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-.wrap{max-width:1100px;margin:0 auto;padding:14px 10px 40px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.wrap{max-width:1400px;margin:0 auto;padding:10px 10px 14px;display:flex;flex-direction:column;align-items:center;gap:14px}
 .top{width:100%;display:flex;justify-content:space-between;align-items:center}
 .back{color:var(--muted);text-decoration:none;font-size:14px}
 .back:hover{color:var(--text)}
@@ -73,6 +73,13 @@ h1{margin:0;font-size:clamp(26px,6vw,40px);font-weight:800;letter-spacing:.02em;
 .btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:var(--muted)}
 .confetti{position:fixed;top:-12px;width:9px;height:14px;border-radius:2px;z-index:6;pointer-events:none;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+@media (orientation:landscape) and (max-height:760px) and (min-width:600px){
+  .wrap{display:grid;grid-template-columns:minmax(220px,300px) 1fr;grid-template-rows:auto auto auto auto auto auto 1fr;column-gap:18px;row-gap:10px;align-items:center;justify-items:center;height:100vh;height:100dvh;padding:8px 12px}
+  .wrap>.top{grid-column:1 / -1}
+  .wrap>h1,.wrap>.levels,.wrap>.hud,.wrap>.mode,.wrap>.best,.wrap>.tip{grid-column:1}
+  .wrap>.boardwrap{grid-column:2;grid-row:2 / span 6;align-self:center}
+  .tip{font-size:12px}
+}
 </style>
 </head>
 <body>
@@ -126,9 +133,12 @@ function newGame(){
   sizeBoard(); build(); updateHud(); showBest();
 }
 function sizeBoard(){
-  const avail=Math.min(window.innerWidth-36,1060);
-  const availH=window.innerHeight-260; // room for the title, buttons and counters
-  const size=Math.max(18,Math.min(40,Math.floor((avail-20)/G.cols)-3,Math.floor(availH/G.rows)-3));
+  const side=matchMedia('(orientation:landscape) and (max-height:760px) and (min-width:600px)').matches;
+  const avail=side?window.innerWidth-360:Math.min(window.innerWidth-36,1400);
+  let availH;
+  if(side){availH=window.innerHeight-70}
+  else{const cur=board.offsetHeight||0;const extra=Math.max(200,document.querySelector('.wrap').offsetHeight-cur+16);availH=window.innerHeight-extra}
+  const size=Math.max(18,Math.min(72,Math.floor((avail-20)/G.cols)-1,Math.floor(availH/G.rows)-1));
   document.documentElement.style.setProperty('--cell',size+'px');
   board.style.gridTemplateColumns=`repeat(${G.cols},var(--cell))`;
 }
